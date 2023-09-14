@@ -1,14 +1,23 @@
-import React, { FC} from 'react';
+import React, { FC, useEffect} from 'react';
 import { Linking, SafeAreaView, Text, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {StackScreenProps} from "@react-navigation/stack"
 import { CarDetailInterface, NavigatorParamList } from '../Interface';
 import { carDetailStyles } from '../Styles/carDetailStyles';
 import { renderDetail } from '../component/renderItemDetail';
+import { useNavigation } from '@react-navigation/native';
+import { AppDispatch } from '../redux/store';
+import { setChargeProgress } from '../redux/carSlice';
 
 const CarDetail: FC<StackScreenProps<NavigatorParamList , "carDetail">> = () => {
 	const state = useSelector((state: CarDetailInterface) => state?.car);
+	const navigation = useNavigation<NavigatorParamList>();
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(()=>{
+    dispatch(setChargeProgress(0))
+  },[])
 
   return (
     <SafeAreaView style={carDetailStyles.container}>
@@ -35,7 +44,10 @@ const CarDetail: FC<StackScreenProps<NavigatorParamList , "carDetail">> = () => 
         {renderDetail("Recommended Charger", state.carDetail?.recommendedCharger)}
         {renderDetail("Charge Speed In Kw", state.carDetail?.chargeSpeedInKw)}
 
-      <TouchableOpacity style={carDetailStyles.chargeButton}>
+      <TouchableOpacity onPress={()=>{
+        dispatch(setChargeProgress(0))
+        navigation.navigate('carCharge')
+        }} style={carDetailStyles.chargeButton}>
         <Text style={carDetailStyles.chargeButtonText}>Charge</Text>
       </TouchableOpacity>
 

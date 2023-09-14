@@ -1,8 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-
 import { carDetailStyles } from '../Styles/carDetailStyles';
-
 
 export const renderDetail= (label:string, value:string) => (
       <View style={carDetailStyles.detailRow}>

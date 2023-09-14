@@ -3,6 +3,7 @@ export type NavigatorParamList = {
   Car:undefined
   carDetail:undefined
   carList:undefined
+  carCharge:undefined
 }
 
 export interface CarInfo {

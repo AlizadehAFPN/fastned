@@ -10,6 +10,7 @@ import { CarDetailInterface, CarInfo, NavigatorParamList } from '../Interface';
 import { setCarDetail } from '../redux/carSlice';
 import { AppDispatch } from '../redux/store';
 import { fetchCarDetail } from '../services';
+import { isEmpty } from 'lodash';
 
 
 const CarList: FC<StackScreenProps<NavigatorParamList , "carList">> = () => {
@@ -38,7 +39,7 @@ const CarList: FC<StackScreenProps<NavigatorParamList , "carList">> = () => {
 return (
 	<SafeAreaView style={styles.container}>
 	<FlashList
-		estimatedItemSize={state?.carList?.length}
+		estimatedItemSize={ isEmpty(state?.carList) ? 100 : state?.carList?.length }
 		renderItem={({ item }: { item: CarInfo }) => (
 			<CarListItem item={item} onPressCar={onPressCar} />
 		  )}

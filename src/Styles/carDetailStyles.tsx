@@ -1,11 +1,12 @@
 import React from 'react';
-import { StyleSheet } from "react-native";
+import {StyleSheet } from "react-native";
   
-export const carDetailStyles = StyleSheet.create({
+ export const carDetailStyles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-around',
     alignItems: 'center',
+    backgroundColor:'white'
   },
   image: {
     width: '100%',

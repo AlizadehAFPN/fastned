@@ -8,12 +8,15 @@ import { CarDetailInterface, CarInfo } from '../../Interface';
 interface CarState {
   carList: CarInfo[] | null;
   carDetail: CarDetailInterface | null; // Use null instead of an empty object
+  batteryCharge: number, // Initialize carDetail as null
+
 }
 
 // Define the initial state
 const initialState: CarState = {
   carList: [],
   carDetail: null, // Initialize carDetail as null
+  batteryCharge: 0, // Initialize carDetail as null
 };
 
 // Creating Redux slice
@@ -27,10 +30,13 @@ const configSlice = createSlice({
     setCarDetail: (state, action: PayloadAction<CarDetailInterface>) => {
       state.carDetail = action.payload;
     },
+    setChargeProgress: (state, action: PayloadAction<number>) => {
+      state.batteryCharge = action.payload;
+    },
   },
 });
 
 // Export action creators and reducer
-export const { getCarList, setCarDetail } = configSlice.actions;
+export const {setChargeProgress , getCarList, setCarDetail } = configSlice.actions;
 
 export default configSlice.reducer;

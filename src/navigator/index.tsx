@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CarList from '../screen/CarList';
 import CarDetail from '../screen/CarDetail';
+import CarChatge from '../screen/CarCharge';
 import { useDispatch } from 'react-redux';
 import { fetchCarList } from '../services';
 import { useQuery } from 'react-query';
@@ -21,7 +22,7 @@ const AppNavigator = () => {
 
 }
 
-const CarStack :React.FC<StackScreenProps<NavigatorParamList>> = () => {
+const CarStack : FC<StackScreenProps<NavigatorParamList>> = () => {
 
 	const dispatch = useDispatch();
 	useQuery('carList', () => fetchCarList(),
@@ -36,6 +37,7 @@ const CarStack :React.FC<StackScreenProps<NavigatorParamList>> = () => {
 		<Stack.Navigator >
 			<Stack.Screen name="carList" component={CarList} options={{ title: 'Cars' }}/>
 			<Stack.Screen name="carDetail" component={CarDetail} options={{ title: 'Detail' }}/>
+			<Stack.Screen name="carCharge" component={CarChatge}  options={{ title: 'Charging' }}/>
 		</Stack.Navigator>
 	);
 
