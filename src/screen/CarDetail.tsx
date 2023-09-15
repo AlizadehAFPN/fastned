@@ -15,9 +15,6 @@ const CarDetail: FC<StackScreenProps<NavigatorParamList , "carDetail">> = () => 
 	const navigation = useNavigation<NavigatorParamList>();
   const dispatch = useDispatch<AppDispatch>();
 
-  useEffect(()=>{
-    dispatch(setChargeProgress(0))
-  },[])
 
   return (
     <SafeAreaView style={carDetailStyles.container}>
@@ -37,7 +34,7 @@ const CarDetail: FC<StackScreenProps<NavigatorParamList , "carDetail">> = () => 
       </TouchableOpacity>
 
         {renderDetail("Brand", state.carDetail?.brand)}
-        {renderDetail("Model", state.carDetail?.model)}
+        {renderDetail("Model", state.carDetail?.model)} 
         {renderDetail("Version", state.carDetail?.version)}
         {renderDetail("Category", state.carDetail?.category)}
         {renderDetail("Connector Type", state.carDetail?.connectorType)}
@@ -45,7 +42,6 @@ const CarDetail: FC<StackScreenProps<NavigatorParamList , "carDetail">> = () => 
         {renderDetail("Charge Speed In Kw", state.carDetail?.chargeSpeedInKw)}
 
       <TouchableOpacity onPress={()=>{
-        dispatch(setChargeProgress(0))
         navigation.navigate('carCharge')
         }} style={carDetailStyles.chargeButton}>
         <Text style={carDetailStyles.chargeButtonText}>Charge</Text>

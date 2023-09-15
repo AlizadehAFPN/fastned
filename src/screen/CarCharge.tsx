@@ -9,44 +9,58 @@ import { CarDetailInterface, NavigatorParamList } from '../Interface';
 import { renderDetail } from '../component/renderItemDetail';
 import FastImage from 'react-native-fast-image';
 import { carDetailStyles } from '../Styles/carDetailStyles';
+let speed : number = 2000;
+const steps : number = 30
 
 // Define the CarCharge component with StackScreenProps
 const CarCharge: FC<StackScreenProps<NavigatorParamList, 'carCharge'>> = () => {
   // Redux state and animation ref
   const state = useSelector((state: CarDetailInterface) => state?.car);
-  const animationProgress: Animated.Value = useRef(new Animated.Value(0)).current;
+  const animationProgress: Animated.Value = useRef(new Animated.Value(state?.currentStep/steps)).current;
   const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
   const dispatch = useDispatch<AppDispatch>();
+  const isMounted = useRef(true); // Initialize a ref to track the component's mounted state
 
   // Animation variables
-  let currentStep = 1;
-  let speed = 2000;
-  const steps = 30
-
+ 
   // Function to start the step animation
-    
+  useEffect(() => {
+    stepAnimation()
+    animateProgress();
+    // Cleanup function to set isMounted to false when the component unmounts
+    return () => {
+      isMounted.current = false;
+    };
+  }, [state?.currentStep]);
+
+
+
+  const animateProgress = () => {
+    if (!isMounted.current) {
+      // Component is unmounted, exit the animation
+      return;
+  }}
 
   const stepAnimation = () => {
-    if (currentStep < steps + 1) {
-      if (currentStep > 0.81 * steps) speed *= 0.25;
-      Animated.timing(animationProgress, {
-        toValue: currentStep / steps,
-        duration: speed,
-        useNativeDriver: false,
-      }).start(() => {
+        Animated.timing(animationProgress, {
+          toValue: state?.currentStep/steps,
+          duration: speed,
+          useNativeDriver: true,
+        }).start(() => {
         setTimeout(() => {
-          currentStep++;
-          stepAnimation();
+          if(state?.currentStep <= steps)
+          {
+            dispatch(setChargeProgress(state?.currentStep + 1));
+            animationProgress.setValue(state?.currentStep/steps)
+          }
         }, speed);
-        dispatch(setChargeProgress(currentStep));
-      })}
+    })
   };
 
   // Function to handle the "Charge" button press
   const handleStartAnimation = () => {
-    dispatch(setChargeProgress(0));
 
-    stepAnimation();
+    dispatch(setChargeProgress(0));
   };
 
   return (
@@ -62,23 +76,22 @@ const CarCharge: FC<StackScreenProps<NavigatorParamList, 'carCharge'>> = () => {
 
       <View style={styles.container}>
         {/* Conditional rendering of barShine not to show at the start and the end */}
-        {state.batteryCharge !== 0 && state.batteryCharge !== steps && (
           <LottieView
             style={styles.barShine}
             source={require('../../app/assets/barShine.json')}
             autoPlay
             loop
           />
-        )}
 
         {/* Animated progress bars */}
         <AnimatedLottieView progress={animationProgress} style={styles.barTop} source={require('../../app/assets/barTop.json')} />
         <AnimatedLottieView progress={animationProgress} style={styles.barBody} source={require('../../app/assets/barBody.json')} />
+        <LottieView style={{marginTop:-30 , height:30 , width:200}}  source={require("../../app/assets/barThunder.json")}/>
 
         {/* Display charge details */}
         <View style={styles.barDetail}>
         <Text>{state.batteryCharge}</Text>
-        <Text style={{fontWeight:'bold' , fontSize:18 ,color:'green'}}>{Math.round((state.batteryCharge * state.carDetail?.chargeSpeedInKw) / steps)} %</Text>
+        {/* <Text style={{fontWeight:'bold' , fontSize:18 ,color:'green'}}>{Math.round((state.batteryCharge * state.carDetail?.chargeSpeedInKw) / steps)} %</Text> */}
           <Text>{state.carDetail?.chargeSpeedInKw} KWH</Text>
         </View>
       </View>
@@ -89,12 +102,6 @@ const CarCharge: FC<StackScreenProps<NavigatorParamList, 'carCharge'>> = () => {
       {renderDetail('Version', state.carDetail?.version)}
       {renderDetail('Fast Charge', state.carDetail?.chargeSpeedInKw)}
 
-      
-
-      {/* Charge button */}
-      <TouchableOpacity onPress={handleStartAnimation} style={styles.chargeButton}>
-        <Text style={styles.chargeButtonText}>Start Chargin</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };
