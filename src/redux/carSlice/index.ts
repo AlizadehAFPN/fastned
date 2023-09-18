@@ -31,7 +31,6 @@ const configSlice = createSlice({
       state.carDetail = action.payload;
     },
     setChargeProgress: (state, action: PayloadAction<number>) => {
-      setTimeout
       state.currentStep = action.payload;
     },
   },

@@ -22,7 +22,7 @@ const CarCharge: FC<StackScreenProps<NavigatorParamList, 'carCharge'>> = () => {
   const isMounted = useRef(true); // Initialize a ref to track the component's mounted state
 
   // Animation variables
- 
+//  console.log(state , 'state')
   // Function to start the step animation
   useEffect(() => {
     stepAnimation()

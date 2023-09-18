@@ -7,13 +7,15 @@ import { carListStyles } from '../Styles/carListStyles';
 interface CarListItemProps {
   item: CarInfo;
   onPressCar: (id: number) => void;
+  testID?: string; // Add the testID prop
+
 }
 
 export const CarListItem: React.FC<CarListItemProps> = ({ item, onPressCar } ) => {
   return (
-    <TouchableOpacity onPress={() => onPressCar(item?.id)} style={carListStyles.carItem}>
-      <View style={carListStyles.carInfoContainer}>
-        <View style={carListStyles.carInfoRow}>
+    <TouchableOpacity  testID={`post-row-${item.id}`} onPress={() => onPressCar(item?.id)} style={carListStyles.carItem}>
+      <View  style={carListStyles.carInfoContainer}>
+        <View testID={`Brand-1`} style={carListStyles.carInfoRow}>
           <Text style={carListStyles.labelText}>Brand:</Text>
           <Text>{item?.brand}</Text>
         </View>

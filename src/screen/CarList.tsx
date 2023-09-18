@@ -1,5 +1,4 @@
 import React, { FC, useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { FlashList } from '@shopify/flash-list';
 import { SafeAreaView, StyleSheet} from 'react-native';
@@ -7,16 +6,19 @@ import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { CarListItem } from '../component/carListItem';
 import { CarDetailInterface, CarInfo, NavigatorParamList } from '../Interface';
-import { setCarDetail } from '../redux/carSlice';
+import { getCarList, setCarDetail } from '../redux/carSlice';
 import { AppDispatch } from '../redux/store';
-import { fetchCarDetail } from '../services';
+import { fetchCarDetail, fetchCarList } from '../services';
 import { isEmpty } from 'lodash';
 
+type PrivateScreenProps = {
+	navigation: StackScreenProps<NavigatorParamList, 'carList'>['navigation'];
+	route: StackScreenProps<NavigatorParamList, 'carList'>['route'];
+		};
 
-const CarList: FC<StackScreenProps<NavigatorParamList , "carList">> = () => {
+const CarList: FC<PrivateScreenProps> = ({navigation }) => {
 
 	const dispatch = useDispatch<AppDispatch>();
-	const navigation = useNavigation<NavigatorParamList>();
 	const [selectedCarId, setSelectedCarId] = useState<number | null>(null);
 	const state = useSelector((state: { car: { carList: CarInfo[]} }) => state?.car);
 
@@ -32,19 +34,30 @@ const CarList: FC<StackScreenProps<NavigatorParamList , "carList">> = () => {
 		},
 	});
 
+	useQuery('carList', () => fetchCarList(),
+	{
+		onSuccess: (data : CarInfo[]) => {
+			dispatch(getCarList(data))
+		},
+		onError: (error) => {}
+	});
+
+
 	const onPressCar = (id: number) => {
 		setSelectedCarId(id);
 	};
 
 return (
-	<SafeAreaView style={styles.container}>
-	<FlashList
-		estimatedItemSize={ isEmpty(state?.carList) ? 100 : state?.carList?.length }
-		renderItem={({ item }: { item: CarInfo }) => (
-			<CarListItem item={item} onPressCar={onPressCar} />
-		  )}
-		data={state?.carList}
-	/>
+	<SafeAreaView testID={`carListItem`} style={styles.container}>
+		<FlashList
+			estimatedItemSize={isEmpty(state?.carList) ? 100 : state?.carList?.length}
+			renderItem={({ item }: { item: CarInfo }) => {
+				return (
+					<CarListItem  item={item} onPressCar={onPressCar} />
+				);
+			}}
+			data={state?.carList}
+		/>
 	</SafeAreaView>
 	);
 };
