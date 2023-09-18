@@ -1,5 +1,5 @@
-import React, { FC, useEffect, useLayoutEffect, useRef } from 'react';
-import { Animated, Platform, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { FC, useEffect, useRef } from 'react';
+import { Animated, SafeAreaView, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { StackScreenProps } from '@react-navigation/stack';
 import LottieView from 'lottie-react-native';
@@ -9,8 +9,11 @@ import { CarDetailInterface, NavigatorParamList } from '../Interface';
 import { renderDetail } from '../component/renderItemDetail';
 import FastImage from 'react-native-fast-image';
 import { carDetailStyles } from '../Styles/carDetailStyles';
-let speed : number = 200;
-const steps : number = 14
+
+// Change the speed of the animation and steps numnbers
+// Will be replaced with backend data
+let speed: number = 3500;
+const steps: number = 14;
 
 // Define the CarCharge component with StackScreenProps
 const CarCharge: FC<StackScreenProps<NavigatorParamList, 'carCharge'>> = () => {
@@ -21,12 +24,10 @@ const CarCharge: FC<StackScreenProps<NavigatorParamList, 'carCharge'>> = () => {
   const dispatch = useDispatch<AppDispatch>();
   const isMounted = useRef(true); // Initialize a ref to track the component's mounted state
 
-  // Animation variables
-
   // Function to start the step animation
   useEffect(() => {
-      stepAnimation()
-      animateProgress();
+    stepAnimation();
+    animateProgress();
 
     // Cleanup function to set isMounted to false when the component unmounts
     return () => {
@@ -34,31 +35,29 @@ const CarCharge: FC<StackScreenProps<NavigatorParamList, 'carCharge'>> = () => {
     };
   }, [state?.currentStep]);
 
+  // Function to handle progress animation
   const animateProgress = () => {
     if (!isMounted.current) {
       // Component is unmounted, exit the animation
       return;
-  }}
-
-  const stepAnimation = () => {
-
-        Animated.timing(animationProgress, {
-          toValue: state?.currentStep/steps,
-          duration: state?.currentStep > 0.8*steps ? speed * 4 : speed,
-          useNativeDriver: true,
-        }).start(() => {
-        setTimeout(() => {
-          if(state?.currentStep < steps)
-          {
-            animationProgress.setValue(state?.currentStep/steps)
-            dispatch(setChargeProgress(state?.currentStep + 1));
-          }
-           
-        }, speed);
-      })
+    }
   };
 
-  console.log(state?.currentStep/steps )
+  // Function to animate the progress step
+  const stepAnimation = () => {
+    Animated.timing(animationProgress, {
+      toValue: state?.currentStep / steps,
+      duration: state?.currentStep > 0.8 * steps ? speed * 4 : speed,
+      useNativeDriver: true,
+    }).start(() => {
+      setTimeout(() => {
+        if (state?.currentStep < steps) {
+          animationProgress.setValue(state?.currentStep / steps);
+          dispatch(setChargeProgress(state?.currentStep + 1));
+        }
+      }, speed);
+    });
+  };
 
   return (
     <SafeAreaView style={carDetailStyles.chargeScreen}>
@@ -68,29 +67,44 @@ const CarCharge: FC<StackScreenProps<NavigatorParamList, 'carCharge'>> = () => {
           uri: state.carDetail?.imageUrl,
           priority: FastImage.priority.normal,
         }}
-        resizeMode={FastImage.resizeMode.contain}/>
+        resizeMode={FastImage.resizeMode.contain}
+      />
 
       <View style={carDetailStyles.animationView}>
         {/* Conditional rendering of barShine not to show at the start and the end */}
-        {state?.currentStep !== steps &&<LottieView
+        {state?.currentStep !== steps && (
+          <LottieView
             style={carDetailStyles.barShine}
             source={require('../../app/assets/barShine.json')}
             autoPlay
             loop
-          />}
+          />
+        )}
 
         {/* Animated progress bars */}
-        <AnimatedLottieView progress={animationProgress} style={carDetailStyles.barTop} source={require('../../app/assets/barTop.json')} />
-        <AnimatedLottieView progress={animationProgress} style={carDetailStyles.barBody} source={require('../../app/assets/barBody.json')} />
-        {state?.currentStep !== steps &&<LottieView style={{marginTop:-30 , height:30 , width:200}}  source={require("../../app/assets/barThunder.json")}/>}
+        <AnimatedLottieView
+          progress={animationProgress}
+          style={carDetailStyles.barTop}
+          source={require('../../app/assets/barTop.json')}
+        />
+        <AnimatedLottieView
+          progress={animationProgress}
+          style={carDetailStyles.barBody}
+          source={require('../../app/assets/barBody.json')}
+        />
+        {state?.currentStep !== steps && (
+          <LottieView
+            style={{ marginTop: -30, height: 30, width: 200 }}
+            source={require('../../app/assets/barThunder.json')}
+          />
+        )}
 
         {/* Display charge details */}
         <View style={carDetailStyles.barDetail}>
-       
-        <Text>KW : {Math.floor(state?.currentStep/steps * state.carDetail?.externalParameters?.usable_battery_wh/1000)}</Text>
-        <Text style={{fontWeight:'bold' , fontSize:18 ,color:'green'}}>
-          {Math.floor(state?.currentStep/steps * 100)} %
-        </Text>
+          <Text>KW : {Math.floor((state?.currentStep / steps) * (state.carDetail?.externalParameters?.usable_battery_wh / 1000))}</Text>
+          <Text style={{ fontWeight: 'bold', fontSize: 18, color: 'green' }}>
+            {Math.floor((state?.currentStep / steps) * 100)} %
+          </Text>
         </View>
       </View>
 
@@ -99,7 +113,6 @@ const CarCharge: FC<StackScreenProps<NavigatorParamList, 'carCharge'>> = () => {
       {renderDetail('Speed', state.carDetail?.chargeSpeedInKw)}
       {renderDetail('Model', state.carDetail?.model)}
       {renderDetail('Version', state.carDetail?.version)}
-
     </SafeAreaView>
   );
 };

@@ -1,111 +1,50 @@
-# React Native App Assessment
+# Car Charging App
 
-**This is the Fastned React Native App assessment. The assessment is intended to give us insights into your technical abilities, engineering approach and general technical working habits. We view your performance on this assessment as indicative of the work you will deliver as a Fastned software engineer.**
+This React Native mobile application provides information about different cars, their details, and simulates the charging process of a car's battery.
 
-The assessment consists of an assignment to prepare beforehand and a presentation about your implementation of the assignment at the Fastned’s office or through video conference.
+# Features
 
-We ask you to treat the assessment confidential so we can use it again in the future.
+Three Screens: The app consists of three main screens:
 
-Your code should be pushed to a branch, not the `main` one.
+Car List: Displays a list of cars fetched from an API.
 
-At the assessment presentation, you are free to deliver your presentation in any form, but we expect you to cover:
+Car Detail: Shows detailed information about a selected car. Car details are handled via Redux, eliminating the need to pass data between screens.
 
-* The overall approach you took to the assignment
-* The architecture of the solution delivered
-* Your solution for each of the user stories
+Car Charging: Simulates the charging process of a car's battery. While this screen doesn't rely on backend data, it can be easily integrated with backend data storage in the future.
 
----
+Data Management: Data, including the list of cars and car details, is fetched from the API and efficiently managed using Redux, ensuring a seamless and responsive user experience.
 
-## Assignment
+Charge Simulation: The Car Charging screen uses a timer system to simulate the charging process. Future updates can integrate this screen with backend data for more accurate charging simulations.
 
-### The Fastned Solar Charging Network
+Charge Percentage Calculation: The app calculates the charge percentage based on the current step and the total number of steps in the charging process. The formula for calculating the percentage is implemented, but it can be further refined based on specific requirements.
 
-In an ongoing push to make the world greener, Fastned is investing in a mobile application that provides all electric vehicle drivers with information about their car. The Product Owner has passed you some stories and is expecting you to come up with a great solution.
+Unit Tests: Unit tests are written for various components to ensure code quality and reliability.
 
-A prerequisite is to have this application built with **React Native naked** and he is strict about ignoring any **React Native Expo** builds. And of course he is expecting your application to successfully build to **iOS** and **Android** without any issue.
+# Usage
 
-### Backend service
+Clone the repository to your local machine.
+Navigate to the project directory and run yarn to install dependencies.
+Use yarn android or yarn ios to launch the app in your development environment.
 
-This project contains a default backend service that provides a vehicle list and vehicle detail information. You can run the service in a Docker container from the root of this project by running:
+# Tests
 
-```
-docker-compose up -d
-```
+Unit tests for components are available to verify the functionality and behavior of various parts of the application. Unfortunately, integration tests with tools like Masterno have not been configured yet.
 
-The following endpoints are available to use:
+# Future Enhancements
 
-* http://localhost:8485/api/vehicles/
-* http://localhost:8485/api/vehicles/$id/
+While the app provides core functionality, here are some potential areas for improvement:
 
-## The Stories
+Integration Testing: Set up integration tests to ensure the smooth interaction of different parts of the app.
 
-* Vehicle list screen: As Fastned we want a screen that **lists** all known vehicles so we can provide our customers with an overview to help them find their vehicle
-* Vehicle detail screen: As Fastned we want a **detailed** view of vehicle information so we can provide our customers with specific vehicle details
-* Navigation: As Fastned we want the customer to be able to seamlessly **navigate** between the list and detail view so we minimize the effort to find a vehicle
+Backend Integration: Connect the app to a backend API to fetch and manage car data.
+Enhanced Charge Simulation: Implement a more sophisticated charging simulation based on real-world data.
 
-A note from the engineers: At Fastned we deliver all code with **tests**, we use **React query** for the data handling and use a **readme** in the project.
+User Authentication: Add user authentication and profiles to personalize the experience.
 
-### FAST-1: Vehicle list screen
+UI/UX Improvements: Enhance the app's visual design and user interface for a more polished look.
 
-A full screen which renders a **flatlist**. Vehicle **Brand**, **Model** and **Version** should be rendered as an item inside the flatlist. Users should be **navigated** to the vehicle details screen with **on select** event.
+Error Handling: Implement robust error handling and error messages to improve user feedback.
 
-### FAST-2: Vehicle detail screen
+Feel free to contribute and make this app even better!
 
-A full screen that renders the selected **vehicle details**. All information should be rendered inside a scrollable content. This screen should have a **Go Back** button to the vehicle list screen. This detail screen should show the following data:
-
-* Photo
-* Brand, Model and Version
-* Connector Type
-* Recommended Charger
-* A link to external help screen of selected vehicle on Fastned website
-* A button to Start Charging
-* Users should be **navigated** to the charging screen with **on press** event of Start Charging button.
-
-### FAST-3: Charging screen
-A full screen that showcases a vehicle's charging process along with some details of the vehicle. We will not provide any server project or data, so you will need to design the solution autonomously. You have the freedom to either hardcode the logic in the app or integrate Websocket/Socket IO functionalities — the choice is yours.
-
-#### Screen Elements
-
-* Vehicle Information: Display the Brand, Model, and Version of the selected vehicle.
-* Charging Battery Animation: A dynamic representation of the charging process.
-* State of Charge: Provide a numerical or visual representation of the current charging state.
-* kWh Display (Optional): Show the energy value.
-* Speed Display (Optional): Present the charging speed.
-* Shadow Effect (Optional): Add a shadow beneath the battery animation for depth.
-
-#### Assets:
-
-You will find necessary assets and a sample animation video in the assets folder.
-We use JSON files for animations in conjunction with [Lottie Animations](https://github.com/lottie-react-native/lottie-react-native).
-
-##### Important Notes:
-
-* The barShine speed should decelerate to 0.25 when the state of charge is 80 or less.
-* State of charge values should follow a logical sequence, such as 1, 2, 3, 4, 5, 6...20...25...30, etc., without random jumps.
-* The green segment of the animation, referred to as the progress bar, should visually align with the state of charge. As the charge value increases, the width of the green bar should correspondingly expand.
-
----
-
-## Bonus
-
-* Search feature in the vehicle list
-* Showing kWh, speed and shadow under battery animation in charging screen
-* Maestro tests
-
-## Requirements
-### Technology Stack
-The application should be built using following:
-- React Native (version 0.70.0 or higher)
-- React Query (version 4.0.0 or higher) for data fetching
-- Typescript (version 5.0.0 or higher)
- 
-The choice of any additional libraries or tools is left to your discretion, but please be prepared to explain your decision for choosing them.
-
-### Code Quality
-The code should be clean, efficient, and easy to read. Make use of comments where necessary to explain your coding decisions. The usage of Typescript should enhance the readability and maintainability of the code.
-
-### Performance
-The application should run smoothly and load data efficiently. This would typically involve minimizing re-renders and efficiently managing state.
-
-### Testing (optional)
-We would like to see some integration tests using Maestro.
+This README provides an overview of your React Native project, its features, and potential future enhancements. I can customize it further to include specific installation and usage instructions, code examples, and any other relevant information for your assesment.
