@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { FlashList } from '@shopify/flash-list';
-import { SafeAreaView, StyleSheet} from 'react-native';
+import { SafeAreaView, StyleSheet, TextInput} from 'react-native';
 import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { CarListItem } from '../component/carListItem';
@@ -10,6 +10,8 @@ import { getCarList, setCarDetail } from '../redux/carSlice';
 import { AppDispatch } from '../redux/store';
 import { fetchCarDetail, fetchCarList } from '../services';
 import { isEmpty } from 'lodash';
+import { useSearch } from '../services/useSearch';
+import { carDetailStyles } from '../Styles/carDetailStyles';
 
 type PrivateScreenProps = {
 	navigation: StackScreenProps<NavigatorParamList, 'carList'>['navigation'];
@@ -21,6 +23,10 @@ const CarList: FC<PrivateScreenProps> = ({navigation }) => {
 	const dispatch = useDispatch<AppDispatch>();
 	const [selectedCarId, setSelectedCarId] = useState<number | null>(null);
 	const state = useSelector((state: { car: { carList: CarInfo[]} }) => state?.car);
+	const { search } = useSearch(state?.carList || []);
+	const [query, setQuery] = useState<string>(''); // Initialize the query state
+
+	const filteredData = search(query);
 
 	useQuery('carDetail', () => fetchCarDetail(selectedCarId), {
 		enabled: !!selectedCarId,
@@ -48,26 +54,26 @@ const CarList: FC<PrivateScreenProps> = ({navigation }) => {
 	};
 
 return (
-	<SafeAreaView testID={`carListItem`} style={styles.container}>
+	<SafeAreaView testID={`carListItem`} style={carDetailStyles.container}>
+	
+	<TextInput
+        placeholder="Search Cars ..."
+        onChangeText={setQuery}
+        style={carDetailStyles.searchInput}
+      />
 		<FlashList
-			estimatedItemSize={isEmpty(state?.carList) ? 100 : state?.carList?.length}
-			renderItem={({ item }: { item: CarInfo }) => {
-				return (
-					<CarListItem  item={item} onPressCar={onPressCar} />
-				);
-			}}
-			data={state?.carList}
+		estimatedItemSize={isEmpty(state?.carList) ? 100 : state?.carList?.length}
+		renderItem={({ item }: { item: CarInfo }) => (
+			<CarListItem  item={item} onPressCar={onPressCar} />
+		)}
+		data={filteredData}
 		/>
 	</SafeAreaView>
 	);
 };
 
 const styles = StyleSheet.create({
-	container: {
-		backgroundColor: 'white',
-		flex: 1,
-		paddingVertical: 16,
-	}
+	
 });
 
 export default CarList;

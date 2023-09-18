@@ -16,7 +16,7 @@ interface CarState {
 const initialState: CarState = {
   carList: [],
   carDetail: null, // Initialize carDetail as null
-  currentStep: 0, // Initialize carDetail as null
+  currentStep:0, // Initialize carDetail as null
 };
 
 // Creating Redux slice

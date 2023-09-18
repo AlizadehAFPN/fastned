@@ -14,8 +14,8 @@ const CarDetail: FC<StackScreenProps<NavigatorParamList , "carDetail">> = () => 
 	const navigation = useNavigation<NavigatorParamList>();
 
   return (
-    <SafeAreaView style={carDetailStyles.container}>
-
+    <SafeAreaView style={carDetailStyles.containerDetail}>
+      
       <FastImage
         style={carDetailStyles.image}
         source={{
